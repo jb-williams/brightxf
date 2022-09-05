@@ -15,14 +15,14 @@
 
 (Will be Automated by SETUP.sh soon)
 * Copy these somewhere in your PATH:
-    * brcur - current brightness
-    * brwn  - brightness down
-    * brup  - brightness up
-    * brmx  - set brightness to max
-    * brightxf - main script
+    * `brcur` - current brightness
+    * `brwn`  - brightness down
+    * `brup`  - brightness up
+    * `brmx`  - set brightness to max
+    * `brightxf` - main script
 
-* As sudo(root), make a directory /etc/startup and copy brightness_mod.sh there.
-* Then as sudo(root), and copy brightness_mod.service to /etc/systemd/system/ .
+* As `sudo`(root), make a directory `/etc/startup` and copy `brightness_mod.sh` there.
+* Then as `sudo`(root), and copy `brightness_mod.service` to `/etc/systemd/system/` .
 * Then run:
 ```bash
 sudo systemctl enable brightness_mod.service
