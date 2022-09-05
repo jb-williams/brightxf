@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+if [ $# -ne 1 ]; then
+    /usr/bin/echo "Need 1 argument (brup, brwn, brcur, brmx)"
+    exit 1;
+fi
+
+basedir="/sys/class/backlight/"
+handler=$basedir$(ls $basedir)"/"
+current_bright=$(cat "$handler""brightness")
+max_bright=$(cat "$handler""max_brightness")
+min_inc=$(( $max_bright/5 ))
+
+if [[ $current_bright -ge $min_inc && $current_bright -le $max_bright ]]; then
+    if [[ "$1" = 'brup' && $current_bright -le $max_bright ]]; then
+            printf "Brightness Up\n"
+            new_bright=$(( $current_bright + $min_inc ))
+            perc_bright=$(( $new_bright * 100 / $max_bright ))
+            if [[ $new_bright -ge $max_bright ]]; then
+                printf "%d\n" "$max_bright" > $handler"brightness"
+                printf "Brightness %d\n%s\n" "$max_bright", "100%" 2>/dev/null
+                /usr/bin/notify-send -t 3500 "100%"
+            else
+                /usr/bin/notify-send -t 3500 "$perc_bright%"
+                /usr/bin/echo $new_bright > "$handler""brightness"
+                printf "Brightness %d\n%.0f%c\n" "$new_bright", "$perc_bright", "%" 2>/dev/null
+            fi
+    elif [[ "$1" = 'brwn' && $current_bright -ge $min_inc ]]; then
+            printf "Brightness Down\n"
+            new_bright=$(( $current_bright - $min_inc ))
+            perc_bright=$(( $new_bright * 100 / $max_bright ))
+            if [[ $new_bright -le $min_inc ]]; then
+                /usr/bin/notify-send -t 3500 "$perc_bright%"
+                printf "%.0f\n" "$min_inc" > "$handler""brightness"
+                printf "Brightness %d\n%.0f%c" "$min_bright", "$perc_bright", "%" 2>/dev/null
+            else
+                /usr/bin/notify-send -t 3500 "$perc_bright%"
+                printf "%.0f\n" $new_bright > "$handler""brightness"
+                printf "Brightness %d\n%.0f%c\n" "$new_bright", "$perc_bright", "%" 2>/dev/null
+            fi
+    elif [[ "$1" = 'brcur' ]]; then
+            cur_perc_bright=$(( $current_bright * 100 / $max_bright ))
+            /usr/bin/notify-send -t 3500 "$cur_perc_bright%"
+            printf "Current Brightness %d\n%.0f%c\n" "$current_bright", "$cur_perc_bright", "%" 2>/dev/null
+    elif [[ "$1" = 'brmx' ]]; then
+            /usr/bin/notify-send -t 3500 "100%"
+            printf "%d\n" "$max_bright" > "$handler""brightness"
+            printf "Max Brightness %d\n%s\n" "$max_bright", "100%" 2>/dev/null
+    fi
+fi  

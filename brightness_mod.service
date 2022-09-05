@@ -1,0 +1,12 @@
+[Unit]
+Description=Run brightness mod script on startup
+After=default.target
+
+[Service]
+Type=simple
+RemainAfterExit=no
+ExecStart=/etc/startup/brightness_mod.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
