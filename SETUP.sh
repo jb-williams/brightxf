@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
+##### SETUP FOR BRIGHTXF #####
 
 ##### JUST STARTED NOT TESTED DO NOT RUN ###########
+# Reqs:
+    # systemd
+    # sudo
 
-##### SETUP FOR BRIGHTXF #####
-# Requires:
-#           sudo
-
-#### Assumes:
-### ~/.local/bin exists and is in PATH
-
-#### Prefers/Will Attempt to Create:
-### /etc/startup
+## INSTAL SCRIPT NOT TESTED YET 
+# Setup Script Expects:
+    # `~/Gits/brightxf`(may not be necessary)
+    # `~/.local/bin`
+    # `/etc/startup`(will be automated by SETUP.sh soon)
 
 bright_dir=$(pwd)
 script_dir="${HOME}/.local/bin"
