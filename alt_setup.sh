@@ -12,8 +12,9 @@
     # `~/.local/bin`
     # `/etc/startup`(will be automated by SETUP.sh soon)
 
+
 bright_dir=$(pwd)
-script_dir="${HOME}/.local/bin"
+script_dir="${HOME}/bin"
 mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
 

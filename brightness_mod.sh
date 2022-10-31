@@ -3,4 +3,4 @@
 basedir="/sys/class/backlight/"
 handler=$basedir$(ls $basedir)"/"
 
-sudo chmod 666 $handler"brightness"
+sudo chmod 555 $handler"brightness"
