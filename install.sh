@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -eo pipefail
 ##################################
 ####### SETUP FOR BRIGHTXF #######
 ##################################
@@ -24,11 +24,10 @@ script_dir="${HOME}""/bin"
 mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
 user_scripts=("brightxf
-brmx
-brcur
-brup
-brwn")
-
+    brmx
+    brcur
+    brup
+    brwn")
 
 ##########################
 ####### USER SETUP #######
