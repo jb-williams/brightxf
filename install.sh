@@ -22,11 +22,7 @@ shell_config="${HOME}""/.$(echo "${SHELL}" | cut -d "/" -f 3)rc"
 script_dir="${HOME}""/bin"
 mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
-user_scripts=("brightxf
-    brmx
-    brcur
-    brup
-    brwn")
+user_scripts=("brightxf" "brmx" "brcur" "brup" "brwn")
 
 ##########################
 ####### USER SETUP #######
