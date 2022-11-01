@@ -1,6 +1,6 @@
 #!/bin/bash
 
 basedir="/sys/class/backlight/"
-handler=$basedir$(ls $basedir)"/"
+handler=$basedir$(ls $basedir | grep -v 'acpi')"/"
 
-sudo chmod 555 $handler"brightness"
+sudo chmod 666 $handler"brightness"

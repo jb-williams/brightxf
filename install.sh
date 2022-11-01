@@ -32,7 +32,8 @@ user_scripts=("brightxf" "brmx" "brcur" "brup" "brwn")
 ####### USER SETUP #######
 ##########################
 check_path() {
-    echo -e ". ${HOME}/bin" >> "${shell_config}" \
+    echo -e "export PATH=${PATH}:$HOME/bin" >> "${shell_config}" \
+
         && mkdir -p "${script_dir}" \
         && printf "PATH is setup correctly.\n"
 }
