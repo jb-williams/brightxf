@@ -7,7 +7,7 @@ if [ $# -ne 1 ]; then
 fi
 
 basedir="/sys/class/backlight/"
-handler=$basedir$(ls $basedir)"/"
+handler=$basedir$(ls $basedir | grep -v 'acpi')"/"
 current_bright=$(cat "$handler""brightness")
 max_bright=$(cat "$handler""max_brightness")
 min_inc=$(( $max_bright/5 ))

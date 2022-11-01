@@ -18,34 +18,29 @@
 ####################
 ####### VARS #######
 ####################
-user_scripts=("brightxf", "brmx", "brcur", "brup", "brwn")
+## clean up real quick
+sudo rm -rf /tmp/brightxf
+
 bright_dir="/tmp/brightxf"
-shell_config="${HOME}""/.$(echo "${SHELL}" | cut -d "/" -f 3)rc"
-script_dir="${HOME}""/bin"
+shell_config=${HOME}"/.$(echo "${SHELL}" | cut -d "/" -f 3)rc"
+script_dir=${HOME}"/bin"
 mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
+user_scripts=("brightxf" "brmx" "brcur" "brup" "brwn")
 
 ##########################
 ####### USER SETUP #######
 ##########################
 check_path() {
-    echo "${PATH}" | grep -q "${script_dir}"
-    if [ "$?" -ne 0 ]; then
-    #if ! "${req_path}"; then
-        printf "%s does not exits in PATH.. May need to check if the rest of the script ran properly.\n" "${script_dir}" \
-        && echo -e ". ${HOME}/bin" >> "${shell_config}" \
-        && mkdir -p "${script_dir}"
-    else
-        printf "PATH is setup correctly.\n"
-    fi
+    echo -e ". ${HOME}/bin" >> "${shell_config}" \
+        && mkdir -p "${script_dir}" \
+        && printf "PATH is setup correctly.\n"
 }
 
 bright_clone() {
-    if [ ! -d "${bright_dir}" ]; then
-        git clone https://github.com/jb-williams/brightxf.git "${bright_dir}"
-    else
-        printf "%s is setup correctly.\n" "${bright_dir}"
-    fi
+    printf "Cloning Repo %s.....\n" "${bright_dir}"\
+        && git clone https://github.com/jb-williams/brightxf.git "${bright_dir}" \
+        && printf "%s is setup correctly.\n" "${bright_dir}"
 }
 
 check_script_dir() {
@@ -66,9 +61,9 @@ setup_user_files() {
             && chmod 555 "${bright_dir}/${sc}" \
             && cp "${bright_dir}/${sc}" "${script_dir}/${sc}" 
             if [ -f "${script_dir}/${sc}" ]; then
-                printf "Successfully copied user script: %s/%s to %s/%s .......\n" "${bright_dir}" "${sc}" "${service_dir}" "${sc}"
+                printf "Successfully copied user script: %s/%s to %s/%s .......\n" "${bright_dir}" "${sc}" "${script_dir}" "${sc}"
             else
-                printf "Failed to copying user script: %s/%s to %s/%s .......\n" "${bright_dir}" "${sc}" "${service_dir}" "${sc}"
+                printf "Failed to copying user script: %s/%s to %s/%s .......\n" "${bright_dir}" "${sc}" "${script_dir}" "${sc}"
             fi
         else
             printf "Could not find: %s .......\n" "${bright_dir}"

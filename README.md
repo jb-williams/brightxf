@@ -1,10 +1,12 @@
 # Brightxf
 &emsp;**!!Run at Own Risk!!**
-* No issues have come from my use of these but that doesn't mean there won't be
+* No issues have come from running these(yet) but that doesn't mean there won't be!
 * Reqs:
     * systemd
     * sudo
 
+ &emsp;I have various old laptops that I test installs and builds on. Some of them do not have functioning or responsive media/function keys, and I apparently can't properly remapping keys on my minimal systems :P . I made this series of files to allow for basic terminal control of my laptops' screen brightness.
+ 
 * Terminal Commands are:
 
 ```bash
@@ -13,7 +15,10 @@ brcur
 brup
 brwn
 ```
-## INSTALL SCRIPT NOT FULLY TESTED YET 
+## INSTALL SCRIPT (In Progress: May not function as intended) 
+Right now, it looks for anything but 'acpi' in the '/sys/class/backlight/'. I ran into having 2 directories in the backlight directory and needed to specify to correct one.
+**May want to look into what is there before running script**
+The brightness files in the acpi directory were not the ones I wanted to modify for this program.
 
 ### Curl Install
 
@@ -45,4 +50,4 @@ sudo systemctl enable brightness_mod.service
 sudo systemctl daemon-reload
 ```
 
-* May Need a Restart.
+* May Need a Restart Machine.
