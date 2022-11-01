@@ -115,6 +115,6 @@ setup_service() {
 ########################
 ####### MAIN RUN #######
 ########################
-check_path && bright_clone && check_script_dir && setup_mod && setup_service && sudo rm -rf "${bright_dir}" \
-    && printf "Script Completed... Cleaning up install folder.... If Errors were printed, double check that the action completed properly.... Otherwise, it should be working now!!! \n" \
-     && sudo rm -rf "${bright_dir}"
+printf "\n\t########################\n\t####### Brightxf #######\n\t########################\n\n\tStarting Brightxf install.................\n\n" \
+    && check_path && bright_clone && check_script_dir && setup_mod && setup_service && sudo rm -rf "${bright_dir}" \
+    && printf "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n \nCleaning up install folder...............................................\n_________________________________________________________________________\n \nIf Errors were printed, double check that all steps completed properly...\n_________________________________________________________________________\n \nOtherwise, it should be working now.......................................\n________________________________________________________________________\n \nScript Completed.........................................................\n_________________________________________________________________________\n \nTerminal Commands are:\n---------------------\n\tbrmx\tmax\n\tbrcur\tcurrent\n\tbrup\tup\n\tbrwn\tdown\n---------------------\n"
