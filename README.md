@@ -18,7 +18,7 @@ brwn
 ### Curl Install
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/jb-williams/brightxf/master/install.sh | sh
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/jb-williams/brightxf/master/install.sh | bash
 ```
 
 ### Manual Install

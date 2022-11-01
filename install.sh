@@ -29,9 +29,9 @@ service_dir="/etc/systemd/system"
 ####### USER SETUP #######
 ##########################
 check_path() {
-    req_path=$(echo "${PATH}" | grep -q "${script_dir}")
-    #if [ "$?" -ne 0 ]; then
-    if ! "${req_path}"; then
+    echo "${PATH}" | grep -q "${script_dir}"
+    if [ "$?" -ne 0 ]; then
+    #if ! "${req_path}"; then
         printf "%s does not exits in PATH.. May need to check if the rest of the script ran properly.\n" "${script_dir}" \
         && echo -e ". ${HOME}/bin" >> "${shell_config}" \
         && mkdir -p "${script_dir}"
