@@ -3,85 +3,90 @@
 ####### SETUP FOR BRIGHTXF #######
 ##################################
 
-##### JUST STARTED NOT TESTED DO NOT RUN ###########
+##### RUN AT OWN RISK #####
+##### TESTED Debian Testing. ###########
 # Reqs:
     # systemd
     # sudo
+ 
+# Install Script Expects:
+    # `/tmp/brightxf`(added by initial curl install script)
+    # `~/.local/bin`
+    # `/etc/startup`(addded by initial curl install script)
 
-## INSTAL SCRIPT NOT TESTED YET 
-# Setup Script Expects:
-    # `/tmp/brightxf`(usually setup by initial curl install)
-    # `~/bin`
-    # `/etc/startup`(will be automated by SETUP.sh soon)
+# To Run:
+#   curl https://raw.githubusercontent.com/jb-williams/brightxf/master/install.sh | bash
 
 ####################
 ###### COLORS ######
 ####################
-bold=`echo -en "\e[1m"`
-underline=`echo -en "\e[4m"`
-dim=`echo -en "\e[2m"`
-strickthrough=`echo -en "\e[9m"`
-blink=`echo -en "\e[5m"`
-reverse=`echo -en "\e[7m"`
-hidden=`echo -en "\e[8m"`
-normal=`echo -en "\e[0m"`
-black=`echo -en "\e[30m"`
-red=`echo -en "\e[31m"`
-green=`echo -en "\e[32m"`
+bold="\e[1m"
+underline="\e[4m"
+blink="\e[5m"
+normal="\e[0m"
+red="\e[31m"
+green="\e[32m"
+purple="\e[35m"
 
 ####################
 ####### VARS #######
 ####################
-## clean up real quick
-sudo rm -rf /tmp/brightxf
 
 bright_dir="/tmp/brightxf"
-shell_config=${HOME}"/.$(echo "${SHELL}rc" | cut -d "/" -f 3)"
-script_dir=${HOME}"/bin"
+shell_config="${HOME}""/.$(echo "${SHELL}rc" | cut -d "/" -f 3)"
+script_dir="${HOME}""/.local/bin"
 mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
 user_scripts=("brightxf" "brmx" "brcur" "brup" "brwn")
+## clean up real quick
+if [[ -d ${bright_dir} ]];then
+    sudo rm -rf /tmp/brightxf
+fi
 
 ##########################
 ####### USER SETUP #######
 ##########################
 check_path() {
-    echo -e "export PATH=${PATH}:$HOME/bin" >> "${shell_config}" \
-
-        && mkdir -p "${script_dir}" \
-        && printf "${normal}${bold}${green}${underline}PATH ${normal}${green}is setup correctly!${normal}\n"
+    if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+        echo -e "export PATH=${PATH}:$HOME/.local/bin" >> "${shell_config}"
+    fi
+    if [[ ! -d "${script_dir}" ]]; then
+        mkdir -p "${script_dir}" \
+            && printf "%b%s %b%s%b\n" "${normal}${bold}${green}${underline}" "PATH" "${normal}${green}" "is setup correctly!" "${normal}"
+    else
+        printf "%b%s %b%s%b\n" "${normal}${bold}${green}${underline}" "PATH" "${normal}${green}" "is setup correctly!" "${normal}"
+    fi
 }
 
 bright_clone() {
-    printf "${normal}${green}Cloning Repo ${bold}%s${blink}.....${normal}\n" "${bright_dir}"\
+    printf "%b%s %b%s%b\n" "${normal}${green}" "Cloning Repo" "${bold}${blink}" "${bright_dir} ....." "${normal}" \
         && git clone https://github.com/jb-williams/brightxf.git "${bright_dir}" \
-        && printf "${normal}${bold}${green}%s is setup correctly.${normal}\n" "${bright_dir}"
+        && printf "%b%s%b\n" "${normal}${bold}${green}" "${bright_dir} is setup correctly." "${normal}"
 }
 
 check_script_dir() {
-    if [ -d "${script_dir}" ]; then
+    if [[ -d "${script_dir}" ]]; then
             setup_user_files
     else
-        printf "${normal}${bold}${blink}${red}%s ${normal}does not exit${blink}...\n\t${normal}${orange}Attempting to make directory and retrying user file setup${blink}...${normal}${orange}\n\tMay need to check if the rest of the script ran properly.${normal}\n" "${script_dir}" \
-        && mkdir -p "${script_dir}" \
-        && setup_user_files
+        check_path \
+            && setup_user_files
     fi
 }
 
 setup_user_files() {
     for sc in "${user_scripts[@]}"; 
     do
-        if [ -f "${bright_dir}/${sc}" ]; then
+        if [[ -f "${bright_dir}/${sc}" ]]; then
             chown "${USER}":"${USER}" "${bright_dir}/${sc}" \
             && chmod 555 "${bright_dir}/${sc}" \
             && cp "${bright_dir}/${sc}" "${script_dir}/${sc}" 
-            if [ -f "${script_dir}/${sc}" ]; then
-                printf "${normal}${bold}${green}${underline}${blink}Successfully ${normal}${green}copied user script: ${bold}%s/%s to %s/%s ${normal}${green}${blink}.......\n" "${bright_dir}" "${sc}" "${script_dir}" "${sc}"
+            if [[ -f "${script_dir}/${sc}" ]]; then
+                printf "%b%s %b%s %b%s%b%s%b\n" "${normal}${bold}${green}${underline}${blink}" "Successfully" "${normal}${green}" "copied user script:" "${bold}" "${bright_dir} ${sc} to ${script_dir} ${sc}" "${normal}${green}${blink}" "......." "${normal}" 
             else
-                printf "${normal}${bold}${underline}${blink}${red}Failed ${normal}${red}to copying user script: ${bold}%s/%s ${normal}${red}to ${bold}%s/%s ${normal}${red}${blink}.......\n" "${bright_dir}" "${sc}" "${script_dir}" "${sc}"
+                printf "%b%s %b%s %b%s%b%s%b\n" "${normal}${bold}${green}${underline}${blink}" "Successfully" "${normal}${green}" "copied user script:" "${bold}" "${bright_dir} ${sc} to ${script_dir} ${sc}" "${normal}${green}${blink}" "......." "${normal}" 
             fi
         else
-            printf "${normal}${red}Could not find: ${bold}%s ${blink}.......${normal}\n" "${bright_dir}"
+            printf "%b%s %b%s%b%s%b\n" "${normal}${red}" "Could not find:" "${bold}" "${bright_dir}" "${blink}" "......." "${normal}" 
         fi
     done
 }
@@ -90,36 +95,36 @@ setup_user_files() {
 ####### SYSTEM SETUP #######    
 ############################
 setup_mod() {
-    if [ -d "${mod_dir}" ]; then
-        printf "${normal}${green}Setting Up Mod Script at: ${bold}%s${blink}.......${normal}\n" "${mod_dir}"
+    if [[ -d "${mod_dir}" ]]; then
+        printf "%b%s %b%s%b%s%b\n" "${normal}${green}" "Setting Up Mod Script at:" "${bold}" "${mod_dir}" "${blink}" "......." "${normal}"
         sudo chown root:adm "${bright_dir}"/brightness_mod.sh \
-        && sudo chmod 550 "${bright_dir}"/brightness_mod.sh \
-        && sudo cp "${bright_dir}"/brightness_mod.sh "${mod_dir}"/brightness_mod.sh
+            && sudo chmod 550 "${bright_dir}"/brightness_mod.sh \
+            && sudo cp "${bright_dir}"/brightness_mod.sh "${mod_dir}"/brightness_mod.sh
     else
-        printf "${normal}${green}Making Directory and Setting Up Mod Script at: ${bold}%s ${normal}${blink}${green}.......${normal}\n" "${mod_dir}"
+        printf "%b%s %b%s %b%s%b\n" "${normal}${green}" "Making Directory and Setting Up Mod Script at:" "${bold}" "${mod_dir}" "${normal}${blink}${green}" "......." "${normal}" 
         sudo mkdir -p /etc/startup \
-        && sudo chown root:adm "${bright_dir}"/brightness_mod.sh \
-        && sudo chmod 550 "${bright_dir}"/brightness_mod.sh \
-        && sudo cp "${bright_dir}"/brightness_mod.sh "${mod_dir}"/brightness_mod.sh
+            && sudo chown root:adm "${bright_dir}"/brightness_mod.sh \
+            && sudo chmod 550 "${bright_dir}"/brightness_mod.sh \
+            && sudo cp "${bright_dir}"/brightness_mod.sh "${mod_dir}"/brightness_mod.sh
     fi 
 }
 
 setup_service() {
-    if [ -d "${service_dir}" ]; then
-        printf "${normal}${green}Setting Up Service at: ${bold}%s ${normal}${blink}${green}.......\n" "${service_dir}"
+    if [[ -d "${service_dir}" ]]; then
+        printf "%b%s %b%s%b%s%b\n" "${normal}${green}" "Setting Up Service at:" "${bold}" "${service_dir}" "${normal}${blink}${green}" "......." "${normal}"
         sudo chown root:adm "${bright_dir}"/brightness_mod.service \
-        && sudo chmod 444 "${bright_dir}"/brightness_mod.service \
-        && sudo cp "${bright_dir}"/brightness_mod.service "${service_dir}"/brightness_mod.service \
-        && sudo systemctl enable brightness_mod.service \
-        && sudo systemctl daemon-reload
+            && sudo chmod 444 "${bright_dir}"/brightness_mod.service \
+            && sudo cp "${bright_dir}"/brightness_mod.service "${service_dir}"/brightness_mod.service \
+            && sudo systemctl enable brightness_mod.service \
+            && sudo systemctl daemon-reload
     else
-        printf "${bold}${underlined}${red}Failed ${normal}${red}at copying or starting Service Mod to: ${bold}%s ${normal}${blink}${red}.......${normal}\n" "${service_dir}"
+        printf "%b%s %b%s %b%s %b%s%b\n" "${bold}${red}" "Failed" "${normal}${red}" "at copying or starting Service Mod to:" "${bold}" "${service_dir}" "${normal}${blink}${red}" "......." "${normal}"
     fi
 }
 
 ########################
 ####### MAIN RUN #######
 ########################
-printf "${normal}${bold}${purple}\n\t########################\n\t####### ${normal}${bold}${green}Brightxf ${normal}${bold}${purple}#######\n\t########################\n\n\t${normal}${bold}${green}Starting Brightxf install .................${normal}\n\n" \
+printf "%b\n\t%s\n\t%s%b%s%b%s\n\t%s\n\n\t%b%s%b\n\n" "${normal}${bold}${purple}" "########################" "#######" "${normal}${bold}${green}" "Brightxf" "${normal}${bold}${purple}" "#######" "########################" "${normal}${bold}${green}" "Starting Brightxf install ................." "${normal}" \
     && check_path && bright_clone && check_script_dir && setup_mod && setup_service && sudo rm -rf "${bright_dir}" \
-    && printf "${normal}${bold}${purple}\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n \n${normal}${bold}${green}Cleaning up install folder...............................................\n${normal}${bold}${purple}_________________________________________________________________________\n \n${normal}${bold}${green}If Errors were printed, double check that all steps completed properly${normal}${green}...\n${normal}${bold}${purple}_________________________________________________________________________\n \n${normal}${bold}${green}Otherwise, it should be working now${normal}${green}.......................................\n${normal}${bold}${purple}________________________________________________________________________\n \n${normal}${bold}${green}Script Completed${normal}${green}.........................................................\n${normal}${bold}${purple}_________________________________________________________________________\n \n${normal}${bold}${green}Terminal Commands are:\n${normal}${bold}${purple}-------------------------\n\t${normal}${bold}${green}brmx\t${normal}max\n\t${bold}${green}brcur\t${normal}current\n\t${bold}${green}brup\t${normal}up\n\t${bold}${green}brwn\t${normal}down\n${bold}${purple}-------------------------\n${normal}${bold}${purple}+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n${normal}\n\n"
+    && printf "%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n%b%s\n\t%b%s\t%b%s\n\t%b%s\t%b%s\n\t%b%s\t%b%s\n\t%b%s\t%b%s\n%b%s\n%b%s\n%b" "${normal}${bold}${purple}" "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" "${normal}${bold}${green}" "Cleaning up install folder..............................................." "${normal}${bold}${purple}" "_________________________________________________________________________" "${normal}${bold}${green}" "If Errors were printed, double check that all steps completed properly" "${normal}${green}" "..." "${normal}${bold}${purple}" "_________________________________________________________________________" "${normal}${bold}${green}" "Otherwise, it should be working now" "${normal}${green}" "......................................." "${normal}${bold}${purple}" "________________________________________________________________________" "${normal}${bold}${green}" "Script Completed" "${normal}${green}" "........................................................." "${normal}${bold}${purple}" "_________________________________________________________________________" "${normal}${bold}${green}" "Terminal Commands are:" "${normal}${bold}${purple}" "-------------------------" "${normal}${bold}${green}" "brmx" "${normal}" "max" "${bold}${green}" "brcur" "${normal}" "current" "${bold}${green}" "brup" "${normal}" "up" "${bold}${green}" "brwn" "${normal}" "down" "${bold}${purple}" "-------------------------" "${normal}${bold}${purple}" "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" "${normal}"
