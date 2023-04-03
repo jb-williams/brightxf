@@ -39,16 +39,17 @@ mod_dir="/etc/startup"
 service_dir="/etc/systemd/system"
 user_scripts=("brightxf" "brmx" "brcur" "brup" "brwn")
 ## clean up real quick
-if [[ -d ${bright_dir} ]];then
-    sudo rm -rf /tmp/brightxf
+if [[ -d "${bright_dir}" ]];then
+    sudo rm -rf "${bright_dir}"
 fi
 
 ##########################
 ####### USER SETUP #######
 ##########################
 check_path() {
-    if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
-        echo -e "export PATH=${PATH}:$HOME/.local/bin" >> "${shell_config}"
+    if ! echo "$PATH" | grep -q "${script_dir}"; then
+    #if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+        echo -e "export PATH=${PATH}:${script_dir}" >> "${shell_config}"
     fi
     if [[ ! -d "${script_dir}" ]]; then
         mkdir -p "${script_dir}" \
