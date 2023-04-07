@@ -23,7 +23,7 @@ The brightness files in the acpi directory were not the ones I wanted to modify 
 ### Curl Install
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/jb-williams/brightxf/master/install.sh | bash
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/jb-williams/brightxf/master/install.sh | sh
 ```
 
 ### Manual Install
