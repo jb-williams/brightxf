@@ -27,6 +27,7 @@ if [[ "$current_bright" -ge "$min_inc" ]] && [[ "$current_bright" -le "$max_brig
                 /usr/bin/echo $new_bright > "$handler""/brightness"
                 /usr/bin/printf "Brightness %d\n%.0f%c\n" "$new_bright", "$perc_bright", "%" 2>/dev/null
             fi
+
     elif [[ "$1" = 'brwn' && "$current_bright" -ge "$min_inc" ]]; then
             /usr/bin/printf "Brightness Down\n"
             new_bright=$(( current_bright - min_inc ))
@@ -40,10 +41,12 @@ if [[ "$current_bright" -ge "$min_inc" ]] && [[ "$current_bright" -le "$max_brig
                 /usr/bin/printf "%.0f\n" "$new_bright" > "$handler""/brightness"
                 /usr/bin/printf "Brightness %d\n%.0f%c\n" "$new_bright", "$perc_bright", "%" 2>/dev/null
             fi
+
     elif [[ "$1" = 'brcur' ]]; then
             cur_perc_bright=$(( current_bright * 100 / max_bright ))
             /usr/bin/notify-send -t 3500 "$cur_perc_bright%"
             /usr/bin/printf "Current Brightness %d\n%.0f%c\n" "$current_bright", "$cur_perc_bright", "%" 2>/dev/null
+
     elif [[ "$1" = 'brmx' ]]; then
             /usr/bin/notify-send -t 3500 "100%"
             /usr/bin/printf "%d\n" "$max_bright" > "$handler""/brightness"
